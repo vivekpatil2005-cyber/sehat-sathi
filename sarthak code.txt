@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seth Saty | Autonomous Health & Smart Dispenser Network</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            med: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            },
+            tealAccent: {
+              400: '#2dd4bf',
+              500: '#14b8a6',
+              600: '#0d9488',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #94a3b8;
+      border-radius: 5px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+
+    /* Rhythmic Dual Heartbeat (Dip-Dip / Lub-Dub) visual contraction */
+    @keyframes heartbeat-double {
+      0% { transform: scale(1); filter: drop-shadow(0 0 25px rgba(225, 29, 72, 0.4)); }
+      12% { transform: scale(1.08); filter: drop-shadow(0 0 50px rgba(244, 63, 94, 0.9)); }
+      22% { transform: scale(0.98); filter: drop-shadow(0 0 25px rgba(225, 29, 72, 0.5)); }
+      34% { transform: scale(1.15); filter: drop-shadow(0 0 65px rgba(239, 68, 68, 1)); }
+      50% { transform: scale(1); filter: drop-shadow(0 0 25px rgba(225, 29, 72, 0.4)); }
+      100% { transform: scale(1); filter: drop-shadow(0 0 25px rgba(225, 29, 72, 0.4)); }
+    }
+
+    .animate-heartbeat {
+      animation: heartbeat-double 1.1s cubic-bezier(0.21, 0.61, 0.35, 1) infinite;
+    }
+
+    /* Heart video masking for an organic cardiac shape */
+    .heart-mask {
+      mask-image: radial-gradient(circle, rgba(0,0,0,1) 58%, rgba(0,0,0,0) 80%);
+      -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 58%, rgba(0,0,0,0) 80%);
+    }
+
+    /* Hardware 3D button effect */
+    .btn-hardware {
+      transition: all 0.1s ease;
+      box-shadow: 0 8px 0 #b91c1c, 0 12px 20px rgba(0,0,0,0.25);
+    }
+    .btn-hardware:active {
+      transform: translateY(6px);
+      box-shadow: 0 2px 0 #b91c1c, 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .pulse-beacon {
+      animation: beacon 2s infinite ease-in-out;
+    }
+    @keyframes beacon {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.3); opacity: 0.4; }
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-tealAccent-500 selection:text-white relative">
+
+  <!-- ========================================================================= -->
+  <!-- NAVIGATION BAR                                                            -->
+  <!-- ========================================================================= -->
+  <nav class="fixed top-0 left-0 w-full z-50 bg-white/85 backdrop-blur-md border-b border-slate-200 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#hero-container" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-med-600 to-tealAccent-500 flex items-center justify-center text-white shadow-md shadow-med-500/20 group-hover:scale-105 transition-transform">
+          <i data-lucide="cross" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <span class="text-xl font-black tracking-tight text-slate-900 flex items-center gap-1">
+            SETH <span class="text-med-600">SATY</span>
+          </span>
+          <span class="block text-[10px] font-semibold text-slate-400 -mt-1 tracking-widest uppercase">Autonomous Health Grid</span>
+        </div>
+      </a>
+
+      <!-- Desktop Links -->
+      <div class="hidden lg:flex items-center gap-8 font-medium text-slate-600 text-sm">
+        <a href="#dashboard" class="hover:text-med-600 transition-colors flex items-center gap-1.5"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard</a>
+        <a href="#ordering" class="hover:text-med-600 transition-colors flex items-center gap-1.5"><i data-lucide="shopping-cart" class="w-4 h-4"></i> Order & Boat Dispatch</a>
+        <a href="#tracker" class="hover:text-med-600 transition-colors flex items-center gap-1.5"><i data-lucide="navigation" class="w-4 h-4"></i> Live Tracker</a>
+        <a href="#dispenser" class="hover:text-med-600 transition-colors flex items-center gap-1.5"><i data-lucide="cpu" class="w-4 h-4"></i> Smart Dispenser</a>
+        <a href="#chatbot" class="hover:text-med-600 transition-colors flex items-center gap-1.5"><i data-lucide="bot" class="w-4 h-4"></i> Saty Health AI</a>
+      </div>
+
+      <!-- Quick Action / Audio & Cart Badge -->
+      <div class="flex items-center gap-3">
+        <!-- Heartbeat Sound Controller -->
+        <button id="heartbeat-audio-btn" onclick="toggleHeartbeatAudio()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-rose-50 text-rose-700 text-xs font-bold border border-rose-200 hover:bg-rose-100 transition shadow-sm" title="Toggle Dip-Dip Heartbeat Sound">
+          <i data-lucide="volume-2" id="audio-btn-icon" class="w-4 h-4 text-rose-600 animate-pulse"></i>
+          <span id="audio-btn-text">Audio: ON</span>
+        </button>
+
+        <a href="#ordering" class="relative p-2.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+          <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+          <span id="cart-counter" class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-med-600 text-white text-[11px] font-bold flex items-center justify-center">0</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========================================================================= -->
+  <!-- 1. INTRO HERO & SCROLL ANIMATION (BEATING HEART VIDEO + DIP-DIP AUDIO)   -->
+  <!-- ========================================================================= -->
+  <div id="hero-container" class="relative h-[230vh] bg-gradient-to-b from-slate-950 via-slate-900 to-med-950 text-white select-none">
+    
+    <!-- Sticky viewport that responds to scroll -->
+    <div id="hero-sticky" class="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden px-6">
+      
+      <!-- Atmospheric Ambient Glows -->
+      <div class="absolute inset-0 pointer-events-none opacity-40">
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-rose-600 rounded-full blur-[160px]"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-med-600 rounded-full blur-[160px]"></div>
+      </div>
+
+      <!-- ECG Line Indicator & Scroll Hint -->
+      <div id="scroll-instruction" class="absolute top-24 flex flex-col items-center text-center text-slate-300 transition-opacity duration-300 pointer-events-none z-30">
+        <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-mono tracking-wider mb-2">
+          <span class="w-2 h-2 rounded-full bg-rose-500 pulse-beacon"></span> VITAL SIGNS: 72 BPM [DIP-DIP SYNC]
+        </div>
+        <p class="text-xs uppercase tracking-[0.3em] font-semibold text-tealAccent-400">Autonomous Health Grid</p>
+        <p class="text-sm text-slate-400 mt-1 flex items-center gap-2">
+          <span>Scroll down to expand heart and awaken system</span>
+          <i data-lucide="chevron-down" class="w-4 h-4 animate-bounce"></i>
+        </p>
+      </div>
+
+      <!-- The Morphing Centerpiece: Video Heart + Blooming "SATY" -->
+      <div class="relative flex items-center justify-center pointer-events-none">
+        
+        <!-- Scalable Heart Wrapper -->
+        <div id="anim-heart-wrapper" class="relative transition-transform will-change-transform z-10">
+          
+          <!-- Inner rhythmic "dip-dip" pumping element -->
+          <div id="heart-pulse-node" class="animate-heartbeat relative flex items-center justify-center w-72 h-72 sm:w-88 sm:h-88 md:w-96 md:h-96 rounded-full overflow-hidden border-2 border-rose-500/40 bg-black/80">
+            
+            <!-- VIDEO HEART EMBED (User's provided Pixabay heart video) -->
+            <video 
+              id="pixabay-heart-video" 
+              class="w-full h-full object-cover heart-mask mix-blend-screen scale-110" 
+              src="https://pixabay.com/videos/download/video-32264_medium.mp4" 
+              autoplay 
+              loop 
+              muted 
+              playsinline
+              preload="auto">
+            </video>
+
+            <!-- Cardiac Glow Overlay -->
+            <div class="absolute inset-0 bg-radial from-rose-500/20 via-transparent to-transparent pointer-events-none"></div>
+            
+            <!-- ECG Cardiac Wave Accent -->
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-25">
+              <svg class="w-full h-24 stroke-rose-400 fill-none" viewBox="0 0 500 100" preserveAspectRatio="none">
+                <path d="M0,50 L180,50 L195,20 L210,85 L225,10 L240,65 L255,45 L270,50 L500,50" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Blooming "SATY" text emerging directly outward from inside the heart -->
+        <div id="anim-saty" class="absolute z-20 opacity-0 scale-50 transition-all will-change-transform text-center select-none pointer-events-none">
+          <div class="inline-block px-4 py-1 rounded-full bg-teal-500/20 border border-teal-400/40 text-teal-300 text-xs font-mono tracking-widest uppercase mb-2 backdrop-blur">
+            System Online
+          </div>
+          <h1 class="text-6xl sm:text-8xl md:text-9xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white via-tealAccent-300 to-med-200 drop-shadow-[0_15px_30px_rgba(0,0,0,0.9)]">
+            SATY
+          </h1>
+          <p class="text-base sm:text-2xl font-light tracking-widest text-teal-100 mt-2 uppercase drop-shadow-md">
+            Autonomous Medical Relief Ecosystem
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Quick Action CTAs after scroll completes -->
+      <div id="hero-actions" class="absolute bottom-14 opacity-0 transition-opacity duration-500 z-30 flex flex-wrap items-center justify-center gap-4">
+        <a href="#dashboard" class="px-7 py-3.5 rounded-xl bg-gradient-to-r from-med-500 to-tealAccent-500 hover:from-med-600 hover:to-tealAccent-600 font-bold text-white shadow-xl shadow-med-500/30 transition transform hover:-translate-y-0.5 flex items-center gap-2">
+          <i data-lucide="activity" class="w-5 h-5"></i> Enter Command Hub
+        </a>
+        <a href="#ordering" class="px-7 py-3.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-200 font-medium border border-slate-700 backdrop-blur transition flex items-center gap-2">
+          <i data-lucide="anchor" class="w-5 h-5"></i> Order via Flood Boat
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- 2. DASHBOARD: REAL-TIME TELEMETRY & SYSTEM VITALS                         -->
+  <!-- ========================================================================= -->
+  <section id="dashboard" class="py-24 px-6 max-w-7xl mx-auto">
+    
+    <div class="mb-14 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 pb-8">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-med-100 text-med-700 text-xs font-bold uppercase tracking-wider mb-3">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Network Active
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Mission Control Dashboard</h2>
+        <p class="text-slate-500 text-base mt-2 max-w-2xl">
+          Real-time metrics from our telemetry stream across rural flood boats, clinic relay hubs, and IoT smart medicine dispensers.
+        </p>
+      </div>
+      <div class="flex items-center gap-3">
+        <button onclick="refreshDashboardMetrics()" class="px-4 py-2.5 rounded-xl bg-white border border-slate-200 shadow-sm text-slate-700 text-sm font-semibold hover:bg-slate-50 transition flex items-center gap-2">
+          <i data-lucide="refresh-cw" id="refresh-icon" class="w-4 h-4"></i> Sync Telemetry
+        </button>
+      </div>
+    </div>
+
+    <!-- 4 Main Stats Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      
+      <!-- Boat Battery Card -->
+      <div class="bg-white p-7 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Boat Alpha-01 Battery</span>
+          <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <i data-lucide="battery-charging" class="w-5 h-5"></i>
+          </div>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="stat-boat-battery" class="text-4xl font-black text-slate-900">88%</span>
+          <span class="text-xs font-semibold text-emerald-600">Solar Active</span>
+        </div>
+        <div class="w-full h-2.5 bg-slate-100 rounded-full mt-4 overflow-hidden">
+          <div id="bar-boat-battery" class="h-full bg-emerald-500 rounded-full transition-all duration-500" style="width: 88%"></div>
+        </div>
+        <p class="text-xs text-slate-400 mt-3 flex justify-between">
+          <span>Est. Range: 42 km</span>
+          <span>48.4 V DC</span>
+        </p>
+      </div>
+
+      <!-- Dispenser Status Card -->
+      <div class="bg-white p-7 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Dispenser Array Status</span>
+          <div class="w-9 h-9 rounded-xl bg-med-50 text-med-600 flex items-center justify-center">
+            <i data-lucide="cpu" class="w-5 h-5"></i>
+          </div>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span class="text-3xl font-black text-slate-900">Online & Ready</span>
+        </div>
+        <div class="w-full h-2.5 bg-slate-100 rounded-full mt-4 overflow-hidden">
+          <div class="h-full bg-med-500 rounded-full" style="width: 100%"></div>
+        </div>
+        <p class="text-xs text-slate-400 mt-3 flex justify-between">
+          <span>Dual Servos Calibrated</span>
+          <span class="text-med-600 font-semibold">TFT Live</span>
+        </p>
+      </div>
+
+      <!-- Active Boat Deliveries -->
+      <div class="bg-white p-7 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Active Boat Deliveries</span>
+          <div class="w-9 h-9 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center">
+            <i data-lucide="ship" class="w-5 h-5"></i>
+          </div>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="stat-active-deliveries" class="text-4xl font-black text-slate-900">4 Vessels</span>
+        </div>
+        <div class="w-full h-2.5 bg-slate-100 rounded-full mt-4 overflow-hidden">
+          <div class="h-full bg-sky-500 rounded-full" style="width: 65%"></div>
+        </div>
+        <p class="text-xs text-slate-400 mt-3 flex justify-between">
+          <span>In Flood Zones: 3</span>
+          <span>Returning: 1</span>
+        </p>
+      </div>
+
+      <!-- Total Doses Dispensed -->
+      <div class="bg-white p-7 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md transition">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Doses Dispensed</span>
+          <div class="w-9 h-9 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center">
+            <i data-lucide="check-check" class="w-5 h-5"></i>
+          </div>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="stat-total-dispensed" class="text-4xl font-black text-slate-900">1,842</span>
+          <span class="text-xs font-bold text-teal-600">+12 today</span>
+        </div>
+        <div class="w-full h-2.5 bg-slate-100 rounded-full mt-4 overflow-hidden">
+          <div class="h-full bg-tealAccent-500 rounded-full" style="width: 92%"></div>
+        </div>
+        <p class="text-xs text-slate-400 mt-3 flex justify-between">
+          <span>Accuracy: 99.98%</span>
+          <span>Zero Jam Logged</span>
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Telemetry Log -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2 bg-white rounded-2xl p-7 border border-slate-200 shadow-sm">
+        <div class="flex items-center justify-between pb-5 border-b border-slate-100 mb-5">
+          <h3 class="font-bold text-slate-900 text-lg flex items-center gap-2">
+            <i data-lucide="radio" class="w-5 h-5 text-med-600"></i> Autonomous Grid Telemetry Logs
+          </h3>
+          <span class="text-xs font-mono bg-slate-100 text-slate-600 px-3 py-1 rounded-full">Freq: 868 MHz LoRa / 4G</span>
+        </div>
+        
+        <div id="telemetry-log-list" class="space-y-3.5 overflow-hidden">
+          <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 text-sm">
+            <div class="flex items-center gap-3">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              <span class="font-semibold text-slate-800">Boat Alpha-01: Navigating Delta Sector 3</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 font-mono">OK</span>
+            </div>
+            <span class="text-xs text-slate-400 font-mono">14s ago</span>
+          </div>
+
+          <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 text-sm">
+            <div class="flex items-center gap-3">
+              <span class="w-2.5 h-2.5 rounded-full bg-med-500"></span>
+              <span class="font-semibold text-slate-800">Smart Dispenser Node #08: Slot A Cycle (Paracetamol 500mg)</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-med-100 text-med-700 font-mono">DISPENSED</span>
+            </div>
+            <span class="text-xs text-slate-400 font-mono">1m ago</span>
+          </div>
+
+          <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 text-sm">
+            <div class="flex items-center gap-3">
+              <span class="w-2.5 h-2.5 rounded-full bg-tealAccent-500"></span>
+              <span class="font-semibold text-slate-800">ISD 1820 Voice Prompt: "Time for scheduled medication"</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-teal-100 text-teal-800 font-mono">AUDIO</span>
+            </div>
+            <span class="text-xs text-slate-400 font-mono">4m ago</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Waterway Environmental Hydrology -->
+      <div class="bg-gradient-to-br from-slate-900 to-med-950 text-white rounded-2xl p-7 flex flex-col justify-between shadow-lg">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold tracking-widest text-tealAccent-400 uppercase">Flood Hydrology Sensors</span>
+            <i data-lucide="waves" class="w-5 h-5 text-tealAccent-400"></i>
+          </div>
+          <h4 class="text-xl font-bold text-white mb-2">Waterway Autonav Safety</h4>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Real-time sonar depth and flow metrics feeding autonomous boat thrusters.
+          </p>
+
+          <div class="mt-6 space-y-4">
+            <div>
+              <div class="flex justify-between text-xs font-medium mb-1">
+                <span class="text-slate-300">River Flow Velocity</span>
+                <span class="text-tealAccent-300 font-mono">1.8 m/s (Moderate)</span>
+              </div>
+              <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div class="h-full bg-tealAccent-400 rounded-full" style="width: 45%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs font-medium mb-1">
+                <span class="text-slate-300">Obstacle Clearance</span>
+                <span class="text-tealAccent-300 font-mono">4.6 meters</span>
+              </div>
+              <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div class="h-full bg-med-400 rounded-full" style="width: 82%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+          <span>Autopilot: Dual GNSS lock</span>
+          <span class="text-emerald-400 font-bold flex items-center gap-1"><i data-lucide="shield-check" class="w-4 h-4"></i> Stable</span>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ========================================================================= -->
+  <!-- 3. ORDER SET: MEDICINE ORDERING + AUTONOMOUS BOAT DISPATCH & HARDWARE BTN   -->
+  <!-- ========================================================================= -->
+  <section id="ordering" class="py-24 px-6 bg-slate-100/70 border-y border-slate-200">
+    <div class="max-w-7xl mx-auto">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-med-100 text-med-700 text-xs font-bold uppercase tracking-wider mb-3">
+          <i data-lucide="package" class="w-3.5 h-3.5"></i> Order Set & Fulfillment
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">Prescription & Emergency Dispatch</h2>
+        <p class="text-slate-600 text-lg mt-3">
+          Configure supplies for standard clinic receipt or dispatch directly via our 
+          <span class="text-med-600 font-semibold">Autonomous Boat Unit</span> for flood cut-off regions.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        
+        <!-- Left: Medicine Catalog -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm">
+            <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+              <i data-lucide="pill" class="w-5 h-5 text-med-600"></i> Select Medication / Relief Kits
+            </h3>
+
+            <div class="space-y-4">
+              <div class="flex items-center justify-between p-4 rounded-2xl border border-slate-200 hover:border-med-400 transition bg-white group">
+                <div class="flex items-center gap-4">
+                  <div class="w-12 h-12 rounded-xl bg-med-50 text-med-600 flex items-center justify-center font-bold text-lg group-hover:scale-110 transition">
+                    Rx
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-slate-900">ORS & Electrolyte Rehydration Pack</h4>
+                    <p class="text-xs text-slate-500">Immediate treatment for waterborne distress & dehydration</p>
+                    <span class="inline-block mt-1 text-xs font-semibold text-med-600">$4.50 • 10 Sachets</span>
+                  </div>
+                </div>
+                <button onclick="addToCart('ORS & Electrolyte Rehydration Pack', 4.50)" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-med-600 hover:text-white text-slate-700 text-xs font-bold transition flex items-center gap-1.5">
+                  <i data-lucide="plus" class="w-4 h-4"></i> Add
+                </button>
+              </div>
+
+              <div class="flex items-center justify-between p-4 rounded-2xl border border-slate-200 hover:border-med-400 transition bg-white group">
+                <div class="flex items-center gap-4">
+                  <div class="w-12 h-12 rounded-xl bg-med-50 text-med-600 flex items-center justify-center font-bold text-lg group-hover:scale-110 transition">
+                    Rx
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-slate-900">Paracetamol + Ibuprofen Combo Pack</h4>
+                    <p class="text-xs text-slate-500">Antipyretic & pain relief for high fevers and injury</p>
+                    <span class="inline-block mt-1 text-xs font-semibold text-med-600">$6.20 • 20 Tablets</span>
+                  </div>
+                </div>
+                <button onclick="addToCart('Paracetamol + Ibuprofen Combo Pack', 6.20)" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-med-600 hover:text-white text-slate-700 text-xs font-bold transition flex items-center gap-1.5">
+                  <i data-lucide="plus" class="w-4 h-4"></i> Add
+                </button>
+              </div>
+
+              <div class="flex items-center justify-between p-4 rounded-2xl border border-slate-200 hover:border-med-400 transition bg-white group">
+                <div class="flex items-center gap-4">
+                  <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-lg group-hover:scale-110 transition">
+                    🚑
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-slate-900">Comprehensive Flood Trauma & Suture Kit</h4>
+                    <p class="text-xs text-slate-500">Sterile bandages, iodine, tourniquet & surgical shears</p>
+                    <span class="inline-block mt-1 text-xs font-semibold text-emerald-600">$24.00 • Heavy Duty</span>
+                  </div>
+                </div>
+                <button onclick="addToCart('Flood Trauma & Suture Kit', 24.00)" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-med-600 hover:text-white text-slate-700 text-xs font-bold transition flex items-center gap-1.5">
+                  <i data-lucide="plus" class="w-4 h-4"></i> Add
+                </button>
+              </div>
+            </div>
+
+            <!-- Delivery Mode Selector -->
+            <div class="mt-8 pt-6 border-t border-slate-200">
+              <label class="block text-sm font-bold text-slate-800 mb-3">Delivery Dispatch Protocol:</label>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <label class="flex items-start gap-3 p-4 rounded-2xl border-2 border-slate-200 cursor-pointer hover:border-slate-300 transition bg-white">
+                  <input type="radio" name="delivery_mode" value="standard" class="mt-1" onchange="toggleDeliveryMode('standard')">
+                  <div>
+                    <span class="block font-bold text-slate-900 text-sm">Standard Land Delivery</span>
+                    <span class="block text-xs text-slate-500 mt-0.5">Clinic Pickup or Urban Courier</span>
+                  </div>
+                </label>
+
+                <label class="flex items-start gap-3 p-4 rounded-2xl border-2 border-med-500 bg-med-50/50 cursor-pointer shadow-sm relative overflow-hidden">
+                  <span class="absolute top-0 right-0 bg-med-600 text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-bl">Flood / Remote Priority</span>
+                  <input type="radio" name="delivery_mode" value="boat" checked class="mt-1" onchange="toggleDeliveryMode('boat')">
+                  <div>
+                    <span class="block font-bold text-med-900 text-sm flex items-center gap-1.5">
+                      <i data-lucide="ship" class="w-4 h-4 text-med-600"></i> Autonomous Boat
+                    </span>
+                    <span class="block text-xs text-slate-600 mt-0.5">Navigates flooded rivers & isolated islands (25-50 min)</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right: Active Cart & Physical Hardware Button Simulation -->
+        <div class="lg:col-span-5 space-y-8">
+          
+          <div class="bg-white rounded-3xl p-7 border border-slate-200 shadow-md">
+            <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center justify-between">
+              <span>Order Summary</span>
+              <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600" id="cart-item-count">0 items</span>
+            </h3>
+
+            <div id="cart-list" class="divide-y divide-slate-100 max-h-56 overflow-y-auto mb-4 pr-1 text-sm text-slate-600">
+              <p class="py-6 text-center text-slate-400 italic">No medicines in basket. Select items from above or triage with Dr. Saty AI below.</p>
+            </div>
+
+            <div class="border-t border-slate-200 pt-4 space-y-2 text-sm">
+              <div class="flex justify-between text-slate-500">
+                <span>Subtotal</span>
+                <span id="cart-subtotal" class="font-mono">$0.00</span>
+              </div>
+              <div class="flex justify-between text-slate-500">
+                <span>Autonomous River Navigation</span>
+                <span class="font-mono text-tealAccent-600 font-semibold">$0.00 (Subsidized)</span>
+              </div>
+              <div class="flex justify-between text-base font-black text-slate-900 pt-2 border-t border-slate-100">
+                <span>Grand Total</span>
+                <span id="cart-total" class="font-mono text-med-600">$0.00</span>
+              </div>
+            </div>
+
+            <button onclick="dispatchOrderNow()" id="checkout-btn" class="w-full mt-6 py-3.5 rounded-xl bg-gradient-to-r from-med-600 to-tealAccent-600 hover:from-med-700 hover:to-tealAccent-700 text-white font-bold text-sm shadow-lg shadow-med-500/20 transition flex items-center justify-center gap-2">
+              <i data-lucide="send" class="w-4 h-4"></i> Dispatch Prescription via Boat
+            </button>
+          </div>
+
+          <!-- Physical Hardware Button Simulator -->
+          <div class="bg-gradient-to-b from-slate-900 to-slate-950 text-white rounded-3xl p-7 border border-slate-800 shadow-xl relative overflow-hidden">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></span>
+                <h4 class="font-bold text-sm text-slate-200 uppercase tracking-wider">Dispenser Hardware Trigger</h4>
+              </div>
+              <span class="text-[10px] font-mono bg-slate-800 text-slate-400 px-2 py-0.5 rounded">GPIO Pin 22</span>
+            </div>
+
+            <p class="text-xs text-slate-400 leading-relaxed mb-6">
+              Our hardware unit integrates a physical mechanical trigger for patients without smartphone access. Pressing this broadcasts an emergency boat refill packet over LoRa radio.
+            </p>
+
+            <div class="flex flex-col items-center justify-center py-4 bg-slate-800/60 rounded-2xl border border-slate-700/80">
+              <button id="physical-boat-button" onclick="triggerHardwareBoatOrder()" class="btn-hardware w-36 h-36 rounded-full bg-gradient-to-b from-red-500 to-red-700 text-white font-black text-center flex flex-col items-center justify-center p-4 cursor-pointer focus:outline-none focus:ring-4 focus:ring-red-400/40 select-none">
+                <i data-lucide="anchor" class="w-8 h-8 mb-1 stroke-[2.5]"></i>
+                <span class="text-[11px] font-black tracking-wider uppercase leading-tight">PRESS FOR<br>BOAT DISPATCH</span>
+              </button>
+              <span class="text-[11px] font-mono text-slate-400 mt-4 flex items-center gap-1.5">
+                <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-amber-400"></i> Direct boat alert with GPS coordinates
+              </span>
+            </div>
+
+            <div id="hardware-feedback" class="mt-4 text-center text-xs font-semibold text-emerald-400 hidden">
+              ⚡ Emergency signal transmitted! Autonomous Boat Alpha-01 dispatched to dispenser location.
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================================================= -->
+  <!-- 4. DELIVERY TRACKER: INTERACTIVE VISUAL BOAT MAP & SENSORS                 -->
+  <!-- ========================================================================= -->
+  <section id="tracker" class="py-24 px-6 max-w-7xl mx-auto">
+    
+    <div class="mb-12 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-100 text-teal-800 text-xs font-bold uppercase tracking-wider mb-3">
+          <i data-lucide="radar" class="w-3.5 h-3.5 text-teal-600"></i> Real-time Autonav
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Autonomous Boat Tracker</h2>
+        <p class="text-slate-500 text-base mt-2 max-w-2xl">
+          Visual radar of Boat Alpha-01 en route through remote river reaches. Live sonar obstacles, water current vector, and dynamic ETA computation.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3">
+        <button onclick="toggleBoatSiren()" class="px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 text-xs font-bold hover:bg-slate-50 transition flex items-center gap-2 shadow-sm">
+          <i data-lucide="volume-2" class="w-4 h-4 text-med-600"></i> Toggle Fog Siren
+        </button>
+        <button onclick="rerouteBoatSimulation()" class="px-4 py-2.5 rounded-xl bg-med-600 text-white text-xs font-bold hover:bg-med-700 transition flex items-center gap-2 shadow-md shadow-med-600/20">
+          <i data-lucide="shuffle" class="w-4 h-4"></i> Reroute Obstacle
+        </button>
+      </div>
+    </div>
+
+    <!-- Map & HUD Container -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-slate-950 rounded-3xl p-6 border border-slate-800 shadow-2xl text-white overflow-hidden relative">
+      
+      <!-- Interactive Visual Map Canvas -->
+      <div class="lg:col-span-8 relative bg-[#09111e] rounded-2xl overflow-hidden border border-slate-800 min-h-[440px] flex items-center justify-center">
+        <canvas id="boatTrackerCanvas" class="w-full h-full block cursor-crosshair"></canvas>
+
+        <div class="absolute top-4 left-4 bg-slate-900/85 backdrop-blur px-3 py-2 rounded-xl border border-slate-700/60 text-[11px] font-mono space-y-1 pointer-events-none">
+          <div class="text-tealAccent-400 font-bold flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-tealAccent-400 animate-ping"></span> GNSS: DGPS RTK Locked
+          </div>
+          <div class="text-slate-300">Lat: 23°48'14" N | Lon: 90°24'02" E</div>
+        </div>
+
+        <div class="absolute bottom-4 left-4 right-4 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
+          <div class="bg-slate-900/85 backdrop-blur px-3 py-1.5 rounded-xl border border-slate-700/60 text-xs text-slate-300">
+            Waypoint: <span class="text-white font-bold">Flood Shelter Alpha #4</span>
+          </div>
+          <div class="bg-slate-900/85 backdrop-blur px-3 py-1.5 rounded-xl border border-slate-700/60 text-xs text-emerald-400 font-mono">
+            Thruster Output: 74%
+          </div>
+        </div>
+      </div>
+
+      <!-- Telemetry Column -->
+      <div class="lg:col-span-4 flex flex-col justify-between space-y-6 p-2">
+        <div>
+          <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+            <h4 class="font-bold text-base text-white flex items-center gap-2">
+              <i data-lucide="navigation-2" class="w-4 h-4 text-tealAccent-400"></i> Boat Alpha-01 Telemetry
+            </h4>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">AUTOPILOT</span>
+          </div>
+
+          <div class="mt-6 space-y-5">
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+              <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Estimated Arrival</span>
+              <div class="text-3xl font-black text-tealAccent-400 font-mono tracking-tight" id="tracker-eta">
+                14m 32s
+              </div>
+              <p class="text-xs text-slate-400 mt-1">Distance Remaining: 2.8 nautical miles</p>
+            </div>
+
+            <div class="flex items-center justify-between p-3.5 rounded-xl bg-slate-900 border border-slate-800">
+              <div class="flex items-center gap-3">
+                <i data-lucide="gauge" class="w-5 h-5 text-med-400"></i>
+                <span class="text-xs text-slate-300">Cruising Speed</span>
+              </div>
+              <span class="text-sm font-bold font-mono text-white">12.4 knots</span>
+            </div>
+
+            <div class="flex items-center justify-between p-3.5 rounded-xl bg-slate-900 border border-slate-800">
+              <div class="flex items-center gap-3">
+                <i data-lucide="thermometer-snowflake" class="w-5 h-5 text-sky-400"></i>
+                <span class="text-xs text-slate-300">Medicine Cold Chain</span>
+              </div>
+              <span class="text-sm font-bold font-mono text-emerald-400">3.8 °C (Safe Zone)</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="siren-status-banner" class="hidden p-3 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-200 text-xs flex items-center gap-2">
+          <i data-lucide="bell-ring" class="w-4 h-4 animate-bounce"></i> Acoustic river warning siren broadcasting!
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================================================= -->
+  <!-- 5. SMART DISPENSER SALES & HARDWARE BREAKDOWN                             -->
+  <!-- ========================================================================= -->
+  <section id="dispenser" class="py-24 px-6 bg-slate-100/80 border-t border-slate-200">
+    <div class="max-w-7xl mx-auto">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-med-100 text-med-700 text-xs font-bold uppercase tracking-wider mb-3">
+          <i data-lucide="cpu" class="w-3.5 h-3.5"></i> Hardware Architecture
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">The Seth Saty Smart Dispenser</h2>
+        <p class="text-slate-600 text-lg mt-3">
+          Precision mechatronics engineered for rural and flood-vulnerable households. 
+          Built with fail-safe embedded electronics and instant boat dispatch triggers.
+        </p>
+      </div>
+
+      <!-- Hardware Components Specifications Grid -->
+      <div class="mb-20">
+        <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+          <i data-lucide="layers" class="w-5 h-5 text-med-600"></i> Integrated Component Architecture
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:border-med-500 transition group">
+            <div class="w-12 h-12 rounded-xl bg-med-50 text-med-600 flex items-center justify-center mb-4 group-hover:scale-105 transition">
+              <i data-lucide="cog" class="w-6 h-6"></i>
+            </div>
+            <h4 class="font-bold text-slate-900 text-base">2x High-Torque Servo Motors</h4>
+            <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+              Dual-cylinder mechanical rotation for isolated pill separation. Calibrated step motion prevents pill crushing and guarantees single-tablet dosage isolation.
+            </p>
+            <span class="inline-block mt-3 text-[11px] font-mono text-med-600 bg-med-50 px-2 py-0.5 rounded">MG996R Metal Gear / PWM Driven</span>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:border-med-500 transition group">
+            <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center mb-4 group-hover:scale-105 transition">
+              <i data-lucide="monitor" class="w-6 h-6"></i>
+            </div>
+            <h4 class="font-bold text-slate-900 text-base">1x 1.8" Full-Color TFT Display</h4>
+            <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+              Vibrant patient interface showing pill dosage countdown, medicine name, water intake reminders, and telemedicine QR auth codes.
+            </p>
+            <span class="inline-block mt-3 text-[11px] font-mono text-teal-600 bg-teal-50 px-2 py-0.5 rounded">SPI ST7735 / 128x160 High Contrast</span>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:border-med-500 transition group">
+            <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-4 group-hover:scale-105 transition">
+              <i data-lucide="mic" class="w-6 h-6"></i>
+            </div>
+            <h4 class="font-bold text-slate-900 text-base">1x ISD 1820 Voice Module</h4>
+            <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+              Voice recording and audio playback module allowing doctors or family members to record personalized spoken alerts in local dialects for elderly care.
+            </p>
+            <span class="inline-block mt-3 text-[11px] font-mono text-purple-600 bg-purple-50 px-2 py-0.5 rounded">10s On-board Flash & Mic Amplifier</span>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:border-med-500 transition group">
+            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-4 group-hover:scale-105 transition">
+              <i data-lucide="bell" class="w-6 h-6"></i>
+            </div>
+            <h4 class="font-bold text-slate-900 text-base">1x Piezo Electric Buzzer</h4>
+            <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+              High-frequency multi-tone auditory alarm for unmissable schedule alerts. Rings until medication tray ejection is physically verified by IR sensors.
+            </p>
+            <span class="inline-block mt-3 text-[11px] font-mono text-amber-600 bg-amber-50 px-2 py-0.5 rounded">Active 5V / 85dB Audio Pressure</span>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:border-med-500 transition group">
+            <div class="w-12 h-12 rounded-xl bg-red-50 text-red-600 flex items-center justify-center mb-4 group-hover:scale-105 transition">
+              <i data-lucide="toggle-right" class="w-6 h-6"></i>
+            </div>
+            <h4 class="font-bold text-slate-900 text-base">1x Switch & 1x Boat Order Button</h4>
+            <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+              Tactile rocker switch for power conservation plus a dedicated emergency Red Order Button that instantly broadcasts a boat refill request via LoRa/GSM.
+            </p>
+            <span class="inline-block mt-3 text-[11px] font-mono text-red-600 bg-red-50 px-2 py-0.5 rounded">Direct Interrupt Line / Fail-safe Debounce</span>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm hover:border-med-500 transition group">
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4 group-hover:scale-105 transition">
+              <i data-lucide="zap" class="w-6 h-6"></i>
+            </div>
+            <h4 class="font-bold text-slate-900 text-base">1x Power-Up & Step Module</h4>
+            <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+              Li-ion battery boost converter with integrated surge protector. Keeps MCU and sensors energized for 72+ continuous hours during blackout conditions.
+            </p>
+            <span class="inline-block mt-3 text-[11px] font-mono text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">Buck-Boost DC-DC / BMS 18650 Ready</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 4 Dispenser Variants -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-xl transition flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Variant 01</span>
+            <h4 class="text-xl font-black text-slate-900 mt-1">Saty HomeCare</h4>
+            <p class="text-xs text-slate-500 mt-2">Tailored for elderly patients in residences with WiFi.</p>
+            <div class="my-6">
+              <span class="text-3xl font-black text-slate-900">$149</span>
+              <span class="text-xs text-slate-400">/ unit</span>
+            </div>
+            <ul class="space-y-2 text-xs text-slate-600">
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> 2 Servo Precision Disks</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> 1.8" TFT Display</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> ISD 1820 Voice Reminders</li>
+            </ul>
+          </div>
+          <button onclick="orderDispenserVariant('Saty HomeCare', 149)" class="w-full mt-6 py-3 rounded-xl bg-slate-100 hover:bg-med-600 hover:text-white font-bold text-xs text-slate-800 transition">
+            Deploy HomeCare
+          </button>
+        </div>
+
+        <div class="bg-white rounded-3xl p-6 border-2 border-med-500 shadow-lg relative flex flex-col justify-between">
+          <span class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-med-600 text-white font-bold text-[10px] uppercase tracking-wider">
+            Most Popular
+          </span>
+          <div>
+            <span class="text-xs font-bold text-med-600 uppercase tracking-widest">Variant 02</span>
+            <h4 class="text-xl font-black text-slate-900 mt-1">Saty Community Pro</h4>
+            <p class="text-xs text-slate-500 mt-2">Equipped with 4G LTE and LoRa telemetry for semi-remote village clinics.</p>
+            <div class="my-6">
+              <span class="text-3xl font-black text-med-600">$229</span>
+              <span class="text-xs text-slate-400">/ unit</span>
+            </div>
+            <ul class="space-y-2 text-xs text-slate-600">
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> All Standard Hardware Specs</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> LoRa 15km Beacon Antenna</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> 48-Hour Battery Boost Module</li>
+            </ul>
+          </div>
+          <button onclick="orderDispenserVariant('Saty Community Pro', 229)" class="w-full mt-6 py-3 rounded-xl bg-med-600 hover:bg-med-700 text-white font-bold text-xs shadow-md shadow-med-600/20 transition">
+            Deploy Community Pro
+          </button>
+        </div>
+
+        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-xl transition flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-tealAccent-600 uppercase tracking-widest">Variant 03</span>
+            <h4 class="text-xl font-black text-slate-900 mt-1">Saty FloodRelief</h4>
+            <p class="text-xs text-slate-500 mt-2">IP68 waterproof seal, buoyant casing & auto-transponder for flood zones.</p>
+            <div class="my-6">
+              <span class="text-3xl font-black text-slate-900">$299</span>
+              <span class="text-xs text-slate-400">/ unit</span>
+            </div>
+            <ul class="space-y-2 text-xs text-slate-600">
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Hermetically Sealed Servos</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Direct River Boat Dock Sync</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> 7-Day High-Drain Power Pack</li>
+            </ul>
+          </div>
+          <button onclick="orderDispenserVariant('Saty FloodRelief Rugged', 299)" class="w-full mt-6 py-3 rounded-xl bg-slate-100 hover:bg-med-600 hover:text-white font-bold text-xs text-slate-800 transition">
+            Deploy FloodRelief
+          </button>
+        </div>
+
+        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-xl transition flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Variant 04</span>
+            <h4 class="text-xl font-black text-slate-900 mt-1">Saty Enterprise</h4>
+            <p class="text-xs text-slate-500 mt-2">Multi-patient dispensary hub with biometric/RFID access control.</p>
+            <div class="my-6">
+              <span class="text-3xl font-black text-slate-900">$480</span>
+              <span class="text-xs text-slate-400">/ unit</span>
+            </div>
+            <ul class="space-y-2 text-xs text-slate-600">
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> 4 Servo Multi-Drug Channels</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> RFID Badge Authentication</li>
+              <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Fleet Telemetry Integration</li>
+            </ul>
+          </div>
+          <button onclick="orderDispenserVariant('Saty Clinical Enterprise', 480)" class="w-full mt-6 py-3 rounded-xl bg-slate-100 hover:bg-med-600 hover:text-white font-bold text-xs text-slate-800 transition">
+            Deploy Enterprise
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================================================= -->
+  <!-- 6. HIGHLY TRAINED HEALTH & MEDICAL ADVISOR AI CHATBOT                    -->
+  <!-- ========================================================================= -->
+  <section id="chatbot" class="py-24 px-6 max-w-5xl mx-auto">
+    
+    <div class="text-center mb-12">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-100 text-teal-800 text-xs font-bold uppercase tracking-wider mb-3">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-teal-600"></i> AI Medical Intelligence
+      </div>
+      <h2 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">Saty Medical Advisor</h2>
+      <p class="text-slate-600 text-lg mt-3 max-w-2xl mx-auto">
+        Trained on clinical triage protocols, flood emergency responses, and OTC pharmacology. 
+        Ask any symptom question to receive advice and immediately add recommended relief medicines to your boat order.
+      </p>
+    </div>
+
+    <!-- Main Chat Window Card -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden flex flex-col h-[640px]">
+      
+      <!-- Chat Header -->
+      <div class="p-5 bg-gradient-to-r from-slate-900 to-med-950 text-white flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-med-500 to-tealAccent-400 flex items-center justify-center text-white font-bold shadow">
+            <i data-lucide="stethoscope" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-base text-white flex items-center gap-1.5">
+              Dr. Saty Medical Intelligence
+              <span class="text-[10px] bg-tealAccent-500/20 text-tealAccent-300 px-2 py-0.5 rounded font-mono">Expert Model v4.2</span>
+            </h3>
+            <p class="text-xs text-slate-300">Trained in emergency triage, pharmacology & remote flood care</p>
+          </div>
+        </div>
+
+        <button onclick="clearChatHistory()" class="text-xs text-slate-400 hover:text-white transition flex items-center gap-1 px-3 py-1 rounded-lg bg-slate-800/80">
+          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset
+        </button>
+      </div>
+
+      <!-- Quick Prompt Suggestions -->
+      <div class="px-5 py-3 bg-slate-50 border-b border-slate-100 flex items-center gap-2 overflow-x-auto text-xs whitespace-nowrap">
+        <span class="text-slate-400 font-bold text-[11px] uppercase tracking-wider">Common Triage:</span>
+        <button onclick="handleQuickPrompt('flood_fever')" class="px-3 py-1 rounded-full bg-white border border-slate-200 hover:border-med-500 text-slate-700 transition">
+          🌡️ High Fever & Chills in flood zone
+        </button>
+        <button onclick="handleQuickPrompt('dehydration')" class="px-3 py-1 rounded-full bg-white border border-slate-200 hover:border-med-500 text-slate-700 transition">
+          💧 Severe Dehydration & Diarrhea
+        </button>
+        <button onclick="handleQuickPrompt('laceration')" class="px-3 py-1 rounded-full bg-white border border-slate-200 hover:border-med-500 text-slate-700 transition">
+          🩹 Deep Cut from flood debris
+        </button>
+      </div>
+
+      <!-- Messages Thread -->
+      <div id="chat-messages" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50/50">
+        <div class="flex items-start gap-3 max-w-[85%]">
+          <div class="w-8 h-8 rounded-xl bg-med-600 text-white flex items-center justify-center shrink-0 text-xs font-bold">
+            <i data-lucide="bot" class="w-4 h-4"></i>
+          </div>
+          <div class="bg-white p-4 rounded-2xl rounded-tl-none border border-slate-200 text-sm text-slate-700 shadow-sm leading-relaxed">
+            <p class="font-bold text-med-700 mb-1">Hello, I am your Seth Saty Health Advisor.</p>
+            <p>
+              I am synchronized with the <strong>Autonomous Boat Fleet</strong> and <strong>Smart Dispensers</strong>. Describe your symptoms or ask about medications to trigger an instant recommendation or boat order.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Typing Indicator -->
+      <div id="typing-indicator" class="hidden px-6 py-2 bg-slate-50/50 text-xs text-slate-400 flex items-center gap-2 italic">
+        <span class="w-2 h-2 rounded-full bg-med-500 animate-pulse"></span> Dr. Saty is assessing clinical protocol...
+      </div>
+
+      <!-- Input Form -->
+      <div class="p-4 bg-white border-t border-slate-200">
+        <form id="chat-form" onsubmit="handleUserMessage(event)" class="flex items-center gap-3">
+          <input 
+            type="text" 
+            id="chat-input" 
+            placeholder="Describe symptoms, ask about dosage, or request emergency medicines..."
+            class="flex-1 px-5 py-3.5 rounded-xl bg-slate-100 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-med-500 text-sm"
+            autocomplete="off"
+          />
+          <button 
+            type="submit" 
+            class="px-6 py-3.5 rounded-xl bg-med-600 hover:bg-med-700 text-white font-bold text-sm shadow-md shadow-med-600/20 transition flex items-center gap-2 shrink-0">
+            <span>Send</span>
+            <i data-lucide="send" class="w-4 h-4"></i>
+          </button>
+        </form>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- FOOTER                                                                    -->
+  <!-- ========================================================================= -->
+  <footer class="bg-slate-900 text-slate-400 py-16 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10">
+      
+      <div class="md:col-span-2">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-8 h-8 rounded-lg bg-med-600 flex items-center justify-center text-white font-bold">
+            <i data-lucide="cross" class="w-5 h-5"></i>
+          </div>
+          <span class="text-xl font-black text-white">SETH SATY</span>
+        </div>
+        <p class="text-sm text-slate-400 max-w-md leading-relaxed">
+          Pioneering autonomous waterway logistics and embedded mechatronic medicine dispensers to guarantee that floods and geographical barriers never prevent life-saving care.
+        </p>
+      </div>
+
+      <div>
+        <h5 class="text-white font-bold text-sm mb-4">Core Ecosystem</h5>
+        <ul class="space-y-2 text-xs">
+          <li><a href="#dashboard" class="hover:text-white transition">Telemetry Hub</a></li>
+          <li><a href="#ordering" class="hover:text-white transition">Autonomous Boat Dispatch</a></li>
+          <li><a href="#tracker" class="hover:text-white transition">Sonar & GPS Nav Map</a></li>
+          <li><a href="#dispenser" class="hover:text-white transition">Smart Dispenser Hardware</a></li>
+          <li><a href="#chatbot" class="hover:text-white transition">Saty AI Medical Advisor</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5 class="text-white font-bold text-sm mb-4">Emergency Protocol</h5>
+        <div class="p-3 rounded-xl bg-slate-800 border border-slate-700 text-xs font-mono text-emerald-400">
+          STATUS: 4 BOATS READY IN DOCKS
+        </div>
+      </div>
+
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 pt-10 mt-10 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+      <p>© 2025 Seth Saty Autonomous Health Grid. All rights reserved.</p>
+      <p>Precision Mechatronics & Life Support Systems</p>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT LOGIC & AUDIO SYNTHESIZER (DIP-DIP HEARTBEAT)                  -->
+  <!-- ========================================================================= -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    /* -------------------------------------------------------------------------
+       1. SYNTHESIZED "DIP-DIP" (LUB-DUB) HEARTBEAT AUDIO (Web Audio API)
+       ------------------------------------------------------------------------- */
+    let audioCtx = null;
+    let heartbeatAudioEnabled = true;
+    let heartbeatInterval = null;
+
+    function initAudioContext() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioCtx = new AudioContextClass();
+        }
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    // Acoustic stethoscope synthesis for the two cardiac components: "Lub" & "Dub"
+    function playSingleThump(time, startFreq, duration, volume) {
+      if (!audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        const filter = audioCtx.createBiquadFilter();
+
+        // Lowpass filter to create a warm, muffled chest-wall acoustic sound
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(140, time);
+
+        // Sub-bass pitch sweep
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(startFreq, time);
+        osc.frequency.exponentialRampToValueAtTime(32, time + duration);
+
+        // Attack and decay envelope
+        gain.gain.setValueAtTime(0.001, time);
+        gain.gain.linearRampToValueAtTime(volume, time + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(time);
+        osc.stop(time + duration);
+      } catch (e) {
+        // Audio error handling
+      }
+    }
+
+    // Play both "dip" sounds with authentic timing
+    function triggerDipDipSound() {
+      if (!heartbeatAudioEnabled) return;
+      initAudioContext();
+      if (!audioCtx) return;
+
+      const now = audioCtx.currentTime;
+      // First thump: "Dip" (S1 - Systole)
+      playSingleThump(now, 72, 0.12, 0.65);
+      // Second thump: "Dip" (S2 - Diastole ~170ms later)
+      playSingleThump(now + 0.17, 95, 0.10, 0.5);
+    }
+
+    // Start heartbeat loop (every 1.1 seconds = ~55-60 BPM resting cadence)
+    function startHeartbeatLoop() {
+      if (heartbeatInterval) clearInterval(heartbeatInterval);
+      heartbeatInterval = setInterval(() => {
+        triggerDipDipSound();
+      }, 1100);
+    }
+
+    function toggleHeartbeatAudio() {
+      initAudioContext();
+      heartbeatAudioEnabled = !heartbeatAudioEnabled;
+      const btnText = document.getElementById('audio-btn-text');
+      const btnIcon = document.getElementById('audio-btn-icon');
+
+      if (heartbeatAudioEnabled) {
+        btnText.innerText = "Audio: ON";
+        btnIcon.classList.add('animate-pulse');
+        triggerDipDipSound();
+      } else {
+        btnText.innerText = "Audio: MUTED";
+        btnIcon.classList.remove('animate-pulse');
+      }
+    }
+
+    // Autostart audio on user interaction (first scroll or click) to respect browser autoplay policy
+    const startAudioOnFirstAction = () => {
+      initAudioContext();
+      if (heartbeatAudioEnabled) {
+        triggerDipDipSound();
+        startHeartbeatLoop();
+      }
+      window.removeEventListener('scroll', startAudioOnFirstAction);
+      window.removeEventListener('click', startAudioOnFirstAction);
+    };
+    window.addEventListener('scroll', startAudioOnFirstAction, { passive: true });
+    window.addEventListener('click', startAudioOnFirstAction, { passive: true });
+
+    /* -------------------------------------------------------------------------
+       2. SCROLL-DRIVEN HEART EXPANSION & "SATY" BLOOM
+       ------------------------------------------------------------------------- */
+    const heroContainer = document.getElementById('hero-container');
+    const animHeartWrapper = document.getElementById('anim-heart-wrapper');
+    const animSaty = document.getElementById('anim-saty');
+    const scrollInstruction = document.getElementById('scroll-instruction');
+    const heroActions = document.getElementById('hero-actions');
+    const heartVideo = document.getElementById('pixabay-heart-video');
+
+    window.addEventListener('scroll', () => {
+      const containerRect = heroContainer.getBoundingClientRect();
+      const scrollDist = -containerRect.top;
+      const totalScrollable = heroContainer.offsetHeight - window.innerHeight;
+      
+      let progress = Math.min(Math.max(scrollDist / totalScrollable, 0), 1);
+
+      // Phase 1: Expand heart video container as you scroll down
+      const heartScale = 1 + Math.pow(progress * 2.2, 2.3) * 7.5;
+      animHeartWrapper.style.transform = `scale(${heartScale})`;
+
+      // Fade out heart container slightly at maximum expansion so SATY text takes prominence
+      if (progress > 0.45) {
+        animHeartWrapper.style.opacity = Math.max(1 - (progress - 0.45) * 2.0, 0.2);
+      } else {
+        animHeartWrapper.style.opacity = 1;
+      }
+
+      // Phase 2: SATY blooms outward directly from the core of the beating heart
+      if (progress > 0.20) {
+        const textProgress = Math.min((progress - 0.20) / 0.50, 1);
+        animSaty.style.opacity = textProgress;
+        const satyScale = 0.5 + (textProgress * 0.6); // zooms from 0.5 to 1.1x
+        animSaty.style.transform = `scale(${satyScale})`;
+      } else {
+        animSaty.style.opacity = 0;
+        animSaty.style.transform = `scale(0.5)`;
+      }
+
+      // Phase 3: Hero actions reveal
+      if (progress > 0.2) {
+        scrollInstruction.style.opacity = Math.max(1 - (progress - 0.2) * 4, 0);
+      } else {
+        scrollInstruction.style.opacity = 1;
+      }
+
+      if (progress > 0.65) {
+        heroActions.style.opacity = Math.min((progress - 0.65) * 3, 1);
+        heroActions.style.pointerEvents = 'auto';
+      } else {
+        heroActions.style.opacity = 0;
+        heroActions.style.pointerEvents = 'none';
+      }
+    });
+
+    /* -------------------------------------------------------------------------
+       3. DASHBOARD METRICS SIMULATION
+       ------------------------------------------------------------------------- */
+    let boatBattery = 88;
+    let dispensedCount = 1842;
+
+    function refreshDashboardMetrics() {
+      const icon = document.getElementById('refresh-icon');
+      icon.classList.add('animate-spin');
+      
+      setTimeout(() => {
+        boatBattery = Math.max(15, Math.min(100, boatBattery + (Math.random() > 0.5 ? -1 : 1)));
+        dispensedCount += Math.floor(Math.random() * 3);
+        
+        document.getElementById('stat-boat-battery').innerText = `${boatBattery}%`;
+        document.getElementById('bar-boat-battery').style.width = `${boatBattery}%`;
+        document.getElementById('stat-total-dispensed').innerText = dispensedCount.toLocaleString();
+        
+        addTelemetryLogEntry('Telemetry sync verified by ground station master clock.');
+        icon.classList.remove('animate-spin');
+      }, 600);
+    }
+
+    function addTelemetryLogEntry(message) {
+      const list = document.getElementById('telemetry-log-list');
+      const item = document.createElement('div');
+      item.className = "flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 text-sm";
+      item.innerHTML = `
+        <div class="flex items-center gap-3">
+          <span class="w-2.5 h-2.5 rounded-full bg-med-600"></span>
+          <span class="font-semibold text-slate-800">${message}</span>
+          <span class="text-xs px-2 py-0.5 rounded bg-med-100 text-med-700 font-mono">LIVE</span>
+        </div>
+        <span class="text-xs text-slate-400 font-mono">Just now</span>
+      `;
+      list.insertBefore(item, list.firstChild);
+      if (list.children.length > 5) list.removeChild(list.lastChild);
+    }
+
+    /* -------------------------------------------------------------------------
+       4. ORDER BASKET & AUTONOMOUS BOAT DISPATCH
+       ------------------------------------------------------------------------- */
+    const cart = [];
+    let currentDeliveryMode = 'boat';
+
+    function addToCart(itemName, price) {
+      cart.push({ name: itemName, price: price });
+      renderCart();
+      showToast(`Added ${itemName} ($${price.toFixed(2)}) to cart`);
+    }
+
+    function renderCart() {
+      const cartList = document.getElementById('cart-list');
+      const counter = document.getElementById('cart-counter');
+      const countLabel = document.getElementById('cart-item-count');
+      const subtotalEl = document.getElementById('cart-subtotal');
+      const totalEl = document.getElementById('cart-total');
+
+      counter.innerText = cart.length;
+      countLabel.innerText = `${cart.length} items`;
+
+      if (cart.length === 0) {
+        cartList.innerHTML = `<p class="py-6 text-center text-slate-400 italic">No medicines in basket. Select items from above or triage with Dr. Saty AI below.</p>`;
+        subtotalEl.innerText = '$0.00';
+        totalEl.innerText = '$0.00';
+        return;
+      }
+
+      let subtotal = 0;
+      cartList.innerHTML = '';
+      cart.forEach((item, index) => {
+        subtotal += item.price;
+        const row = document.createElement('div');
+        row.className = "flex items-center justify-between py-2.5";
+        row.innerHTML = `
+          <div>
+            <span class="font-medium text-slate-800">${item.name}</span>
+            <span class="block text-xs text-slate-400 font-mono">$${item.price.toFixed(2)}</span>
+          </div>
+          <button onclick="removeFromCart(${index})" class="text-xs text-red-500 hover:text-red-700 font-semibold">Remove</button>
+        `;
+        cartList.appendChild(row);
+      });
+
+      subtotalEl.innerText = `$${subtotal.toFixed(2)}`;
+      totalEl.innerText = `$${subtotal.toFixed(2)}`;
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      renderCart();
+    }
+
+    function toggleDeliveryMode(mode) {
+      currentDeliveryMode = mode;
+      const checkoutBtn = document.getElementById('checkout-btn');
+      if (mode === 'boat') {
+        checkoutBtn.innerHTML = `<i data-lucide="send" class="w-4 h-4"></i> Dispatch Prescription via Boat`;
+      } else {
+        checkoutBtn.innerHTML = `<i data-lucide="truck" class="w-4 h-4"></i> Submit Regular Courier Order`;
+      }
+      lucide.createIcons();
+    }
+
+    function dispatchOrderNow() {
+      if (cart.length === 0) {
+        alert("Please add at least one medication or emergency kit to your cart first.");
+        return;
+      }
+      alert(`Order Confirmed!\nAutonomous Boat Alpha-01 has been assigned to deliver ${cart.length} item(s).`);
+      addTelemetryLogEntry(`Boat Alpha-01: Dispatched for new order containing ${cart[0].name}.`);
+      document.getElementById('tracker').scrollIntoView({ behavior: 'smooth' });
+      cart.length = 0;
+      renderCart();
+    }
+
+    function triggerHardwareBoatOrder() {
+      const feedback = document.getElementById('hardware-feedback');
+      feedback.classList.remove('hidden');
+      addToCart('Flood Trauma & Suture Kit', 24.00);
+      addToCart('ORS & Electrolyte Rehydration Pack', 4.50);
+      addTelemetryLogEntry('🚨 DISPENSER HARDWARE SWITCH PRESSED: Boat dispatched directly via LoRa.');
+      triggerDipDipSound();
+      setTimeout(() => feedback.classList.add('hidden'), 5000);
+    }
+
+    function orderDispenserVariant(variantName, price) {
+      addToCart(`Hardware Unit: ${variantName}`, price);
+      document.getElementById('ordering').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function showToast(msg) {
+      const toast = document.createElement('div');
+      toast.className = "fixed bottom-8 right-8 z-50 bg-slate-900 text-white text-xs font-semibold px-5 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center gap-3";
+      toast.innerHTML = `<span class="w-2 h-2 rounded-full bg-tealAccent-400"></span> ${msg}`;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    /* -------------------------------------------------------------------------
+       5. BOAT TRACKER CANVAS SIMULATION
+       ------------------------------------------------------------------------- */
+    const canvas = document.getElementById('boatTrackerCanvas');
+    const ctx = canvas.getContext('2d');
+    const pathPoints = [
+      { x: 0.1, y: 0.75 },
+      { x: 0.25, y: 0.60 },
+      { x: 0.40, y: 0.70 },
+      { x: 0.58, y: 0.40 },
+      { x: 0.75, y: 0.45 },
+      { x: 0.90, y: 0.25 },
+    ];
+    let boatProgress = 0.35;
+    let radarAngle = 0;
+
+    function resizeCanvas() {
+      if (!canvas) return;
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function getSplinePoint(t) {
+      const n = pathPoints.length - 1;
+      const index = Math.min(Math.floor(t * n), n - 1);
+      const segmentT = (t * n) - index;
+      const p0 = pathPoints[index];
+      const p1 = pathPoints[index + 1];
+      return {
+        x: (p0.x + (p1.x - p0.x) * segmentT) * canvas.width,
+        y: (p0.y + (p1.y - p0.y) * segmentT) * canvas.height
+      };
+    }
+
+    function drawMapSimulation() {
+      if (!ctx || canvas.width === 0) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // River Water Channel
+      ctx.beginPath();
+      ctx.lineWidth = 42;
+      ctx.strokeStyle = '#0f2744';
+      ctx.lineCap = 'round';
+      pathPoints.forEach((p, idx) => {
+        const px = p.x * canvas.width;
+        const py = p.y * canvas.height;
+        if (idx === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      });
+      ctx.stroke();
+
+      // River Center Line
+      ctx.beginPath();
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = '#0284c7';
+      ctx.setLineDash([8, 12]);
+      pathPoints.forEach((p, idx) => {
+        const px = p.x * canvas.width;
+        const py = p.y * canvas.height;
+        if (idx === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      });
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Boat Movement
+      boatProgress += 0.0006;
+      if (boatProgress > 0.98) boatProgress = 0.05;
+      const boatPos = getSplinePoint(boatProgress);
+
+      // Radar Sweep
+      radarAngle += 0.04;
+      ctx.save();
+      ctx.translate(boatPos.x, boatPos.y);
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(45, 212, 191, 0.3)';
+      ctx.arc(0, 0, 42, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.arc(0, 0, 42, radarAngle, radarAngle + 0.45);
+      ctx.fillStyle = 'rgba(45, 212, 191, 0.25)';
+      ctx.fill();
+
+      // Boat Glyph
+      ctx.fillStyle = '#38bdf8';
+      ctx.beginPath();
+      ctx.moveTo(0, -11);
+      ctx.lineTo(7, 7);
+      ctx.lineTo(-7, 7);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      requestAnimationFrame(drawMapSimulation);
+    }
+    drawMapSimulation();
+
+    function rerouteBoatSimulation() {
+      boatProgress = Math.max(0.1, boatProgress - 0.15);
+      addTelemetryLogEntry('Boat Autonav: Sonar detected debris. Alternate route engaged.');
+      showToast('Boat Alpha-01 Autopilot rerouted around obstacle.');
+    }
+
+    function toggleBoatSiren() {
+      const banner = document.getElementById('siren-status-banner');
+      banner.classList.toggle('hidden');
+      if (!banner.classList.contains('hidden')) {
+        addTelemetryLogEntry('Boat Alpha-01: Acoustic warning horn sounded.');
+        triggerDipDipSound();
+      }
+    }
+
+    /* -------------------------------------------------------------------------
+       6. DR. SATY AI MEDICAL CHATBOT
+       ------------------------------------------------------------------------- */
+    const medicalKnowledge = [
+      {
+        triggers: ['fever', 'temperature', 'hot', 'chills', 'malaria'],
+        reply: "For high fevers in flood or humid conditions, hydrate immediately with safe water. Adult dosage recommendation: **Paracetamol 500mg-1000mg every 6h**. If fever persists beyond 48 hours or is accompanied by rash, prompt clinical testing for dengue/malaria is advised.",
+        suggestedMeds: [{ name: "Paracetamol + Ibuprofen Combo Pack", price: 6.20 }]
+      },
+      {
+        triggers: ['diarrhea', 'dehydration', 'vomit', 'vomiting', 'loose motion'],
+        reply: "Waterborne diarrhea carries immediate dehydration risk. Drink 1 packet of **Oral Rehydration Salts (ORS)** dissolved in 1L boiled or purified water. Continuous small sips maintain electrolyte balance.",
+        suggestedMeds: [{ name: "ORS & Electrolyte Rehydration Pack", price: 4.50 }]
+      },
+      {
+        triggers: ['cut', 'wound', 'laceration', 'bleeding', 'puncture'],
+        reply: "Immediate flood trauma guidance: Irrigate the cut with clean water/antiseptic to prevent bacteria entering from flood runoff. Apply constant pressure with sterile gauze and inspect for tetanus danger.",
+        suggestedMeds: [{ name: "Flood Trauma & Suture Kit", price: 24.00 }]
+      }
+    ];
+
+    function handleUserMessage(event) {
+      event.preventDefault();
+      const input = document.getElementById('chat-input');
+      const query = input.value.trim();
+      if (!query) return;
+
+      appendChatMessage('user', query);
+      input.value = '';
+
+      const typing = document.getElementById('typing-indicator');
+      typing.classList.remove('hidden');
+
+      setTimeout(() => {
+        typing.classList.add('hidden');
+        generateMedicalAnswer(query);
+      }, 600);
+    }
+
+    function appendChatMessage(sender, text, suggestedMeds = []) {
+      const container = document.getElementById('chat-messages');
+      const msgDiv = document.createElement('div');
+      
+      if (sender === 'user') {
+        msgDiv.className = "flex items-start gap-3 justify-end";
+        msgDiv.innerHTML = `
+          <div class="bg-med-600 text-white p-4 rounded-2xl rounded-tr-none text-sm shadow-sm max-w-[85%] leading-relaxed">
+            ${text}
+          </div>
+          <div class="w-8 h-8 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center shrink-0 text-xs font-bold">
+            You
+          </div>
+        `;
+      } else {
+        msgDiv.className = "flex items-start gap-3 max-w-[85%]";
+        let medsHtml = '';
+        if (suggestedMeds && suggestedMeds.length > 0) {
+          medsHtml = `
+            <div class="mt-3 pt-3 border-t border-slate-100 space-y-2">
+              <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Recommended Relief Item:</span>
+              ${suggestedMeds.map(m => `
+                <div class="flex items-center justify-between p-2 rounded-xl bg-med-50/70 border border-med-200 text-xs">
+                  <div class="font-medium text-slate-800">${m.name} <span class="text-med-600 font-bold">($${m.price.toFixed(2)})</span></div>
+                  <button onclick="addToCart('${m.name}', ${m.price})" class="px-3 py-1 rounded-lg bg-med-600 hover:bg-med-700 text-white font-bold text-[11px] transition flex items-center gap-1 shadow-sm">
+                    <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> Add to Boat Order
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        msgDiv.innerHTML = `
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-med-600 to-tealAccent-500 text-white flex items-center justify-center shrink-0 text-xs font-bold">
+            <i data-lucide="cross" class="w-4 h-4"></i>
+          </div>
+          <div class="bg-white p-4 rounded-2xl rounded-tl-none border border-slate-200 text-sm text-slate-700 shadow-sm leading-relaxed">
+            ${text}
+            ${medsHtml}
+          </div>
+        `;
+      }
+
+      container.appendChild(msgDiv);
+      container.scrollTop = container.scrollHeight;
+      lucide.createIcons();
+    }
+
+    function generateMedicalAnswer(query) {
+      const lower = query.toLowerCase();
+      let match = medicalKnowledge.find(entry => entry.triggers.some(t => lower.includes(t)));
+
+      if (match) {
+        appendChatMessage('bot', match.reply, match.suggestedMeds);
+      } else {
+        appendChatMessage(
+          'bot',
+          `Based on your query: "${query}", keep the patient rested in a safe, elevated environment. For hydration and standard relief, we can dispatch our flood trauma kit or rehydration pack right away.`,
+          [
+            { name: "ORS & Electrolyte Rehydration Pack", price: 4.50 },
+            { name: "Flood Trauma & Suture Kit", price: 24.00 }
+          ]
+        );
+      }
+    }
+
+    function handleQuickPrompt(type) {
+      const input = document.getElementById('chat-input');
+      if (type === 'flood_fever') input.value = "Patient has high fever and chills after wading through flood waters.";
+      if (type === 'dehydration') input.value = "Severe diarrhea and signs of fluid loss.";
+      if (type === 'laceration') input.value = "Deep cut from submerged debris, bleeding is steady.";
+      document.getElementById('chat-form').dispatchEvent(new Event('submit', { cancelable: true }));
+    }
+
+    function clearChatHistory() {
+      const container = document.getElementById('chat-messages');
+      container.innerHTML = `
+        <div class="flex items-start gap-3 max-w-[85%]">
+          <div class="w-8 h-8 rounded-xl bg-med-600 text-white flex items-center justify-center shrink-0 text-xs font-bold">
+            <i data-lucide="bot" class="w-4 h-4"></i>
+          </div>
+          <div class="bg-white p-4 rounded-2xl rounded-tl-none border border-slate-200 text-sm text-slate-700 shadow-sm leading-relaxed">
+            <p class="font-bold text-med-700 mb-1">Dr. Saty Medical Intelligence reset.</p>
+            <p>Describe symptoms or emergency needs to evaluate and dispatch supplies via autonomous boat.</p>
+          </div>
+        </div>
+      `;
+      lucide.createIcons();
+    }
+  </script>
+</body>
+</html>
